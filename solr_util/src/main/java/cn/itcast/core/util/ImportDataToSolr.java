@@ -29,7 +29,7 @@ public class ImportDataToSolr {
     private SolrTemplate solrTemplate;
 
     @Test
-    public void importItemDataToSolr () {
+    public void importItemDataToSolr() {
         ItemQuery query = new ItemQuery();
         ItemQuery.Criteria criteria = query.createCriteria();
         //查询审核通过的
@@ -51,11 +51,12 @@ public class ImportDataToSolr {
         }
     }
 
-//    public static void main(String[] args) {
+    //    public static void main(String[] args) {
 //        ApplicationContext context = new ClassPathXmlApplicationContext("classpath*:spring/applicationContext*.xml");
 //        ImportDataToSolr bean = (ImportDataToSolr)context.getBean("importDataToSolr");
 //        bean.importItemDataToSolr();
 //
 //    }
+
 
 }

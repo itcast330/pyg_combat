@@ -15,7 +15,7 @@ public class AddressController {
 
     @Reference
     private AddressService addressService;
-
+    //啊啊
     @RequestMapping("/findListByLoginUser")
     public List<Address> findListByLoginUser() {
         String userName = SecurityContextHolder.getContext().getAuthentication().getName();
