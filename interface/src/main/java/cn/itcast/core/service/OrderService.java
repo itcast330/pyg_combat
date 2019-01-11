@@ -1,5 +1,6 @@
 package cn.itcast.core.service;
 
+import cn.itcast.core.pojo.entity.PageResult;
 import cn.itcast.core.pojo.entity.Result;
 import cn.itcast.core.pojo.log.PayLog;
 import cn.itcast.core.pojo.order.Order;
@@ -12,4 +13,8 @@ public interface OrderService {
     public PayLog getPayLogByUserName(String userName);
 
     public void updatePayStatus(String userName);
+
+    PageResult findPage(Order order, Integer page, Integer rows);
+
+    void updateOrderStatus(Order order);
 }
