@@ -16,26 +16,16 @@
     <script src="../plugins/bootstrap/js/bootstrap.min.js"></script>
     <!-- jQuery 3 -->
     <script src="../js/plugins/jquery/jquery.min.js"></script>
-    <!-- ChartJS -->
-    <script src="../plugins/adminLTE/css/chart/Chart.min.js"></script>
-    <script src="../js/widget/echarts.js"></script>
-    <!-- page script -->
-    <script src="../bower_components/jquery/dist/jquery.min.js"></script>
 
-    <script src="../bower_components/Flot/jquery.flot.js"></script>
-    <!-- FLOT RESIZE PLUGIN - allows the chart to redraw when the window is resized -->
-    <script src="../bower_components/Flot/jquery.flot.resize.js"></script>
-    <!-- FLOT PIE PLUGIN - also used to draw 商家订单百分比s -->
-    <script src="../bower_components/Flot/jquery.flot.pie.js"></script>
-    <!-- FLOT CATEGORIES PLUGIN - Used to draw柱状图s -->
-    <script src="../bower_components/Flot/jquery.flot.categories.js"></script>
-    <script src="../plugins/jQuery/jquery-2.2.3.min.js"></script>
     <!-- 引入 echarts.js -->
     <script type="text/javascript" src="../js/echarts.min.js"></script>
     <!-- 引入jquery.js -->
+    <script type="text/javascript" src="../js/service/orederService.js"></script>
+    <script type="text/javascript" src="../js/controller/orderController.js"></script>
+
 </head>
 
-<body class="hold-transition skin-blue sidebar-mini" ng-app="pinyougou" ng-controller="orderAnalyeController" ng-init="analye()" >
+<body class="hold-transition skin-blue sidebar-mini" ng-app="pinyougou" ng-controller="orderController" ng-init="analye()" >
 ,
 <!-- 内容区域 -->
 <div class="box box-primary">
@@ -73,11 +63,11 @@
                 </thead>
                 <tbody>
                 <tr ng-repeat="ordersAnalye in ordersAnalyeList">
-
+<!--
                     <td>{{ordersAnalye.sellName}}</td>
                     <td>{{ordersAnalye.sellerId}}</td>
                     <td>{{ordersAnalye.totalFee}}</td>
-                    <td>{{ordersAnalye.total}}</td>
+                    <td>{{ordersAnalye.total}}</td>-->
                 </tr>
                 </tbody>
             </table>

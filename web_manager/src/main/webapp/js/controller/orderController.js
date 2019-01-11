@@ -1,9 +1,16 @@
 //控制层 
-app.controller('orderController' ,function($scope,$controller   ,orderService){
+app.controller('orderController' ,function($scope,$controller,orderService){
 
     $controller('baseController',{$scope:$scope});//继承
 
-
+    //读取列表数据绑定到表单中
+    $scope.analye=function(){
+        sellerService.analye().success(
+            function(response){
+                $scope.OrdersAnalyeList=response;
+            }
+        );
+    }
     //分页
     $scope.findPage=function(page,rows){
         orderService.findPage(page,rows).success(
