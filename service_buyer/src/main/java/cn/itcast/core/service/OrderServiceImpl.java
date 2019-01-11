@@ -4,17 +4,13 @@ import cn.itcast.core.dao.log.PayLogDao;
 import cn.itcast.core.dao.order.OrderDao;
 import cn.itcast.core.dao.order.OrderItemDao;
 import cn.itcast.core.pojo.entity.BuyerCart;
-import cn.itcast.core.pojo.entity.PageResult;
 import cn.itcast.core.pojo.log.PayLog;
 import cn.itcast.core.pojo.order.Order;
 import cn.itcast.core.pojo.order.OrderItem;
-import cn.itcast.core.pojo.order.OrderItemQuery;
-import cn.itcast.core.pojo.order.OrderQuery;
 import cn.itcast.core.util.Constants;
 import cn.itcast.core.util.IdWorker;
 import com.alibaba.dubbo.config.annotation.Service;
-import com.github.pagehelper.Page;
-import com.github.pagehelper.PageHelper;
+import org.opensaml.xml.signature.P;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,8 +35,6 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private RedisTemplate redisTemplate;
-
-
 
     @Autowired
     private IdWorker idWorker;
@@ -153,36 +147,5 @@ public class OrderServiceImpl implements OrderService {
             //4. 删除redis中的支付日志数据
             redisTemplate.boundHashOps("payLog").delete(userName);
         }
-    }
-
-    @Override
-    public PageResult findPage(Order order, Integer page, Integer rows) {
-        PageHelper.startPage(page, rows );
-        OrderQuery orderQuery = new OrderQuery();
-        OrderQuery.Criteria criteria = orderQuery.createCriteria();
-
-        if (order != null) {
-            if (order.getStatus() != null && !"".equals(order.getStatus())) {
-                criteria.andStatusEqualTo(order.getStatus());
-            }
-            if (order.getSellerId() != null && !"".equals(order.getSellerId())) {
-                criteria.andSellerIdEqualTo(order.getSellerId());
-            }
-        }
-        Page<Order> orderList = (Page<Order>)orderDao.selectByExample(orderQuery);
-        for (Order order1 : orderList) {
-            OrderItemQuery orderItemQuery = new OrderItemQuery();
-            OrderItemQuery.Criteria itemQueryCriteria = orderItemQuery.createCriteria();
-            itemQueryCriteria.andOrderIdEqualTo(order1.getOrderId());
-            List<OrderItem> orderItemList = orderItemDao.selectByExample(orderItemQuery);
-            order1.setOrderItemList(orderItemList);
-        }
-        return new PageResult(orderList.getTotal(), orderList.getResult());
-
-    }
-    //修改订单状态 发货4
-    @Override
-    public void updateOrderStatus(Order order) {
-        orderDao.updateByPrimaryKeySelective(order);
     }
 }
