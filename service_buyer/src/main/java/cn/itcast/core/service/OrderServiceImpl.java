@@ -3,21 +3,13 @@ package cn.itcast.core.service;
 import cn.itcast.core.dao.log.PayLogDao;
 import cn.itcast.core.dao.order.OrderDao;
 import cn.itcast.core.dao.order.OrderItemDao;
-import cn.itcast.core.dao.seller.SellerDao;
 import cn.itcast.core.pojo.entity.BuyerCart;
-import cn.itcast.core.pojo.entity.OrdersAnalye;
-import cn.itcast.core.pojo.entity.PageResult;
 import cn.itcast.core.pojo.log.PayLog;
 import cn.itcast.core.pojo.order.Order;
 import cn.itcast.core.pojo.order.OrderItem;
-import cn.itcast.core.pojo.order.OrderItemQuery;
-import cn.itcast.core.pojo.order.OrderQuery;
-import cn.itcast.core.pojo.seller.Seller;
 import cn.itcast.core.util.Constants;
 import cn.itcast.core.util.IdWorker;
 import com.alibaba.dubbo.config.annotation.Service;
-import com.github.pagehelper.Page;
-import com.github.pagehelper.PageHelper;
 import org.opensaml.xml.signature.P;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -26,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 
 @Service
@@ -47,78 +38,6 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private IdWorker idWorker;
-
-    @Autowired
-    private SellerDao sellerDao;
-
-    @Override
-    public List <OrdersAnalye> analye() {
-        List <OrdersAnalye> ordersAnalyeList=new ArrayList <> ( );
-        List <Seller> sellerList = sellerDao.selectByExample (null);
-        for (Seller seller : sellerList) {
-            OrdersAnalye ordersAnalye = new OrdersAnalye ( );
-            OrderQuery orderQuery = new OrderQuery ( );
-            OrderQuery.Criteria criteria = orderQuery.createCriteria ( );
-            criteria.andSellerIdEqualTo (seller.getSellerId ());
-            List <Order> orderList = orderDao.selectByExample (orderQuery);
-            ordersAnalye.setSellerId (seller.getSellerId ());
-            ordersAnalye.setSellerName (seller.getName ());
-            ordersAnalye.setTotal ((long) orderList.size ());
-            ordersAnalyeList.add (ordersAnalye);
-        }
-        return ordersAnalyeList;
-    }
-
-
-    @Override
-    public PageResult search(OrderItem orderItem, Integer page, Integer rows) {
-
-        String title = orderItem.getTitle ( );
-        if (!"".equals (title) && title != null) {
-            OrderItemQuery orderItemQuery = new OrderItemQuery ( );
-            OrderItemQuery.Criteria criteria = orderItemQuery.createCriteria ( );
-            criteria.andTitleLike ("%" + title + "%");
-            List <OrderItem> orderItems = orderItemDao.selectByExample (orderItemQuery);
-
-
-            List <Long> orderIdList = new LinkedList<> ( );
-            for (OrderItem item : orderItems) {
-                Long orderId = item.getOrderId ( );
-                orderIdList.add (orderId);
-            }
-
-            PageHelper.startPage (page, rows);
-            OrderQuery orderQuery1 = new OrderQuery ( );
-            OrderQuery.Criteria criteria1 = orderQuery1.createCriteria ( );
-            criteria1.andOrderIdIn (orderIdList);
-
-            Page <Order> orderResult = (Page<Order>) orderDao.selectByExample (orderQuery1);
-            for (Order order : orderResult.getResult ( )) {
-                OrderItemQuery orderItemQuery2 = new OrderItemQuery ( );
-                OrderItemQuery.Criteria criteria2 = orderItemQuery2.createCriteria ( );
-                Long orderId = order.getOrderId ( );
-                criteria2.andOrderIdEqualTo (orderId);
-                List <OrderItem> orderItemList = orderItemDao.selectByExample (orderItemQuery2);
-                order.setOrderItemList (orderItemList);
-            }
-
-            return new PageResult (orderResult.getTotal ( ), orderResult.getResult ( ));
-        }
-
-        PageHelper.startPage (page, rows);
-        Page <Order> orderResult = (Page <Order>) orderDao.selectByExample (null);
-        for (Order order : orderResult.getResult ( )) {
-            OrderItemQuery orderItemQuery = new OrderItemQuery ( );
-            OrderItemQuery.Criteria criteria = orderItemQuery.createCriteria ( );
-            Long orderId = order.getOrderId ( );
-            criteria.andOrderIdEqualTo (orderId);
-            List <OrderItem> orderItemList = orderItemDao.selectByExample (orderItemQuery);
-            order.setOrderItemList (orderItemList);
-        }
-
-        return new PageResult (orderResult.getTotal ( ), orderResult.getResult ( ));
-    }
-
 
 
     @Override

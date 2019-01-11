@@ -22,6 +22,16 @@ public class Order implements Serializable {
 
     private Long orderId;
 
+    private List<OrderItem> orderItemList;
+
+    public List<OrderItem> getOrderItemList() {
+        return orderItemList;
+    }
+
+    public void setOrderItemList(List<OrderItem> orderItemList) {
+        this.orderItemList = orderItemList;
+    }
+
     /**
      * 实付金额。精确到2位小数;单位:元。如:200.07，表示:200元7分
      */
